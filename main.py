@@ -25,11 +25,13 @@ USER_INPUTS = {
 yaml = YAML()
 
 def get_repo_dir_from_url(repo_url, base_dir):
+    
     parsed_url = urlparse(repo_url)
     repo_name = Path(parsed_url.path).stem  
     repo_dir = os.path.join(base_dir, repo_name)
     Path(repo_dir).mkdir(parents=True, exist_ok=True)
     REPO_PATH = repo_dir
+    return repo_dir
 
 
 def clone_and_setup_repo(url, app_type, deploy_branch="deploy"):
@@ -37,7 +39,7 @@ def clone_and_setup_repo(url, app_type, deploy_branch="deploy"):
     repo_dir = get_repo_dir_from_url(url, all_repo_destination)
     print(repo_dir)
 
-    sp.run(["git", "clone", f"https://{url}", repo_dir],check=True)
+    sp.run(["git", "clone", url, repo_dir],check=True)
 
     os.chdir(repo_dir)
     #fetch all remote branches
@@ -59,7 +61,7 @@ def check_and_setup_dockerfile(repo_dir, app_type):
     else:
         print("create dockerfile for directory")
         #here now, we will copay from template docker file according to app type
-        source = os.path.join(BASE_PATH, "template_dockerfile", f"{app_type}.txt")
+        source = os.path.join(BASE_PATH, "template_dockerfile", f"{app_type.lower()}.txt")
         print("source", source)
         target = os.path.join(repo_dir, "Dockerfile")
         print("target", target)
@@ -132,7 +134,7 @@ def print_logo():
 if __name__ == "__main__":
     print_logo()
     
-    USER_INPUTS['APP_TYPE'] = questionary.select("🚀 What type of app do you want to deploy?", choices=["⚛️ React","🐍 FastAPI (Python)",]).ask()
+    USER_INPUTS['APP_TYPE'] = questionary.select("🚀 What type of app do you want to deploy?", choices=["⚛️ React","🐍 FastAPI (Python)",]).ask().split(" ", 1)[1]
     USER_INPUTS['REPO_URL'] = questionary.text("🔗 May I have the GitLab repository URL, please?").ask()
     USER_INPUTS['DEPLOY_BRANCH'] = questionary.text("🌿branch do you wanna deploy?").ask()
     USER_INPUTS['KUBECONFIG_NAME'] = questionary.text("🔧 KubeConfig of the cluster for this repo?").ask()
@@ -143,7 +145,7 @@ if __name__ == "__main__":
     go_ahead = questionary.select("Now ! do you want the magic to happen", choices=["✅ yes", "❌ no"]).ask();
     
     
-    if go_ahead.lower() == "yes":
+    if go_ahead.split(" ", 1)[1].lower() == "yes":
         clone_and_setup_repo(USER_INPUTS['REPO_URL'], USER_INPUTS['APP_TYPE'], USER_INPUTS['DEPLOY_BRANCH'])
     else:
         print("🤔 Okay, let me know why you changed your mind!")
