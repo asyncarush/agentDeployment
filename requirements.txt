@@ -1,1 +1,7 @@
 ruamel.yaml
+rich
+InquirerPy
+emoji
+pyfiglet
+termcolor
+questionary
