@@ -1,7 +1,6 @@
 from urllib.parse import urlparse
 from pathlib import Path
 import subprocess as sp
-import shutil
 import os
 
 class GitHandle:
@@ -19,10 +18,10 @@ class GitHandle:
     def set_repo_dir_from_url(self):
         parsed_url = urlparse(self.user_inputs['REPO_URL'])
         repo_name = Path(parsed_url.path).stem  
+        
         #here we are setting the specific paths for all deployments
         self.REPO_PATH = os.path.join(self.BASE_PATH, "deployments", repo_name)
         Path(self.REPO_PATH).mkdir(parents=True, exist_ok=True)
-        
         
     def clone_and_setup_repo(self):
         clone_check = sp.run(["git", "clone", self.user_inputs['REPO_URL'], self.REPO_PATH], check=True)

@@ -3,7 +3,7 @@ from get_user_inputs import GetUserInputs
 from termcolor import colored
 
 def print_logo():
-    ascii_logo = pyfiglet.figlet_format("Deployer", font="slant")  # Change font if needed
+    ascii_logo = pyfiglet.figlet_format("Agent Deployer", font="slant")  # Change font if needed
     colored_logo = colored(ascii_logo, "cyan")  # Change color if needed
     print(colored_logo)
 

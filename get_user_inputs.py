@@ -65,8 +65,6 @@ class GetUserInputs:
         # now set the valid URL to userinput
         self.USER_INPUTS["REPO_URL"] = url
 
-# https://git.neuralcompany.team/in-house-agents/agentqa/frontend.git
-    
     def get_it_deployed(self):
         git_handler = GitHandle(self.USER_INPUTS)
         git_handler.setup_repo()
